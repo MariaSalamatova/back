@@ -3,14 +3,14 @@ const router = require("express").Router();
 //const forumEvents = require('../utils/forumEvents');
 //const { memoize } = require('../utils/memorizer');
 //const { log } = require('../utils/logger');
-const jwt= require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 let mockPosts = [];
 let currentId = 1;
 
 function verifyToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split("")[1];
+  const token = authHeader && authHeader.split(" ")[1];
   if (!token) return res.status(401).send("Access denied");
   try {
     const verified = jwt.verify(token, "secretkey");
@@ -60,7 +60,7 @@ router.put("/edit/:id", verifyToken, (req, res) => {
   res.json(post);
 });
 
-router.delete("/delete/:id", verifyToken, (req, red) => {
+router.delete("/delete/:id", verifyToken, (req, res) => {
   const postId = parseInt(req.params.id);
   const index = mockPosts.findIndex((p) => p.id === postId);
   if (index === -1) return res.status(404).send("post not found");
